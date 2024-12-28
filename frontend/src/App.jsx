@@ -1,17 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import AppRoutes from "./routes/AppRoutes"
+import { UserProvider } from "./contextApi/User.context"
 
 function App() {
-  const [count, setCount] = useState(0)
+ 
 
   return (
+<<<<<<< HEAD
     <>
       <h1 className="text-3xl font-bold underline">
       my name is madhav bansal
     </h1>
     </>
+=======
+    <UserProvider>
+      <AppRoutes/>
+    </UserProvider>
+    
+>>>>>>> 99bc35037d28cfb3f076ac89ac52b5988a924e9a
   )
 }
 

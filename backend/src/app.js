@@ -11,7 +11,7 @@ const app=express()
 app.use(morgan('dev'))
 
 app.use(cors({
-    origin:process.env.CORS_ORIGIN,
+    origin:process.env.CORS_ORIGIN, // only allow http://localhost:5173
     credentials:true
 }))
 
