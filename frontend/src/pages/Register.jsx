@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState , useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Card , CardHeader, CardContent, CardFooter} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { userContext } from "@/contextApi/User.context";
 const Register = () => {
 
   const navigate = useNavigate();
@@ -11,6 +12,9 @@ const Register = () => {
  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // destructuring userContext and get setUser function
+  const { setUser } = useContext(userContext);
+
   // submit handler
   function submithandler(e) {
     e.preventDefault();
@@ -18,6 +22,8 @@ const Register = () => {
     axios.post("/register", {username, email, password})
         .then( (res) =>{
           console.log(res.data);
+          localStorage.setItem("token", res.data.token);
+          setUser(res.data.user);
           navigate("/home");
         })
         .catch((err) => console.log(err));
