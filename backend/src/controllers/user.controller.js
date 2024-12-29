@@ -14,20 +14,7 @@ export const register = asyncHandler(async (req, res) => {
     }
 
     const { userName, email, password } = req.body;
-    if (
-        [ email, userName, password].some((field) => field?.trim() === "")
-    ) {
-        throw new ApiError(400, "All fields are required")
-    }
-
-
-    const existingUser = await User.findOne({ 
-        $or: [{ userName } , { email }]
-    })
-
-    if (existingUser) {
-        throw new ApiError(409, "User with emial or username already exists");
-    }
+    // creating user in db 
     const user = await registers({ userName, email, password });
     const token = user.generateToken();
     if (!user){
@@ -35,6 +22,7 @@ export const register = asyncHandler(async (req, res) => {
     }
     res.status(201).json(new ApiResponse(201, "User registered successfully", { user, token }));
 });
+
 
 // Login User
 export const login = asyncHandler(async (req, res) => {
@@ -44,22 +32,22 @@ export const login = asyncHandler(async (req, res) => {
     }
 
     const { userName, password } = req.body;
-    if(!userName || !password){
-        throw new ApiError(400, "All fields are required")
+    if (!userName || !password) {
+        throw new ApiError(400, "All fields are required");
     }
-    const user = await User.findOne({ userName }).select("+password");
 
+    const user = await User.findOne({ userName }).select("+password");
     if (!user) {
-        throw new ApiError(404, "User not found");
+        throw new ApiError(404, "Invalid username or password"); // Generic error to avoid revealing which field is incorrect
     }
 
     const isMatch = await user.isPasswordMatch(password);
     if (!isMatch) {
-        throw new ApiError(404, "Invalid user  credentials");
+        throw new ApiError(404, "Invalid username or password"); // Same generic error
     }
 
     const token = user.generateToken();
-    res.status(200).json(new ApiResponse(200, "User LoggedIn successful", { user, token }));
+    res.status(200).json(new ApiResponse(200, "User logged in successfully", { user, token }));
 });
 
 // Profile User
