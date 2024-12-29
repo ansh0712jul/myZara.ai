@@ -1,4 +1,5 @@
 import React, { useState , useContext } from "react";
+import axios  from "@/config/axios"
 import { Link, useNavigate } from "react-router-dom";
 import { Card , CardHeader, CardContent, CardFooter} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,12 +20,12 @@ const Register = () => {
   function submithandler(e) {
     e.preventDefault();
 
-    axios.post("/register", {username, email, password})
+    axios.post("/user/register", {userName: username, email, password})
         .then( (res) =>{
           console.log(res.data);
           localStorage.setItem("token", res.data.token);
           setUser(res.data.user);
-          navigate("/home");
+          navigate("/");
         })
         .catch((err) => console.log(err));
     
@@ -59,8 +60,8 @@ const Register = () => {
               </label>
               <Input
                 onChange={(e) => setUsername(e.target.value)}
-                type="email"
-                placeholder="Enter your email"
+                type="text"
+                placeholder="Enter your username"
                 className="mt-1 w-full"
                 required
               />

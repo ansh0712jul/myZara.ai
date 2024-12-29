@@ -20,13 +20,13 @@ const Login = () => {
 // handle login form submission 
   function handleLogin (e) {
     e.preventDefault();
-    axios.post("/login", {username, password})
+    axios.post("/user/login", {userName:username, password})
         .then( (res) =>{
           console.log(res.data);
           localStorage.setItem("token", res.data.token);
           // making user available to other components
           setUser(res.data.user);
-          navigate("/home");
+          navigate("/");
         })
         .catch((err) => console.log(err));
   }

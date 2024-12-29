@@ -2,7 +2,7 @@ import express from "express"
 import cors from "cors"
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
-import userRouter from "../src/routes/user.routes.js"
+
 
 
 
@@ -20,16 +20,18 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(express.static("public"))
 app.use(cookieParser())
 
-app.use("/user",userRouter);
 
 
 
-// import  routes here 
-// import userRouter from "./routes/userRoutes.js"  -- like 
+
+// import  routes  
+
+import userRouter from "../src/routes/user.routes.js"
 
 
 // routes declaration
-// app.use("/api/v1/users",userRouter) --like
+app.use("/user",userRouter);
+
 
 app.get("/",(req,res)=>{
     res.send("Hello World")
