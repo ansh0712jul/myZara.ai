@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
+import { errorMiddleware } from "./middlewares/error.middleware.js"
 
 
 
@@ -25,7 +26,6 @@ app.use(cookieParser())
 
 
 // import  routes  
-
 import userRouter from "../src/routes/user.routes.js"
 
 
@@ -33,9 +33,8 @@ import userRouter from "../src/routes/user.routes.js"
 app.use("/user",userRouter);
 
 
-app.get("/",(req,res)=>{
-    res.send("Hello World")
-})
+// global error handler middleware
+app.use(errorMiddleware)
 
 
 

@@ -2,9 +2,9 @@ import User from "../models/User.model.js";
 import { registers } from "../services/user.service.js";
 import { validationResult } from "express-validator";
 import redis from "../services/redis.service.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
-import { ApiError } from "../utils/ApiError.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import ApiResponse from "../utils/ApiResponse.js";
+import ApiError from "../utils/ApiError.js";
 
 // Register User
 export const register = asyncHandler(async (req, res) => {

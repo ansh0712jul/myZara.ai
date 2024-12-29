@@ -1,8 +1,7 @@
 //  User service to handle user related operations
 import User from "../models/User.model.js";
-import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
-
+import ApiError from "../utils/ApiError.js";
+import ApiResponse from "../utils/ApiResponse.js";
 export const registers= async ({userName,email,password}) => {
     try {
         if (
