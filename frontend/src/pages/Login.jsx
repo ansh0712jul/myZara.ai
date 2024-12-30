@@ -30,9 +30,11 @@ const Login = () => {
     });
 
 // handle login form submission 
-  function handleLogin (e) {
-    e.preventDefault();
-    axios.post("/user/login", {userName:username, password})
+  function handleLogin (data) {
+    
+    axios.post(`${import.meta.env.VITE_BASE_URL}/user/login`, {
+      userName:data.userName,password: data.password
+    })
         .then( (res) =>{
           console.log(res.data);
           localStorage.setItem("token", res.data.token);
