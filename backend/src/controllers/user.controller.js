@@ -28,12 +28,15 @@ export const register = asyncHandler(async (req, res) => {
 
 // Login User
 export const login = asyncHandler(async (req, res) => {
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         throw new ApiError(400, "Validation failed", "", errors.array());
     }
 
     const { userName, password } = req.body;
+    
+    console.log(userName, password);
     if (!userName || !password) {
         throw new ApiError(400, "All fields are required");
     }
@@ -44,10 +47,13 @@ export const login = asyncHandler(async (req, res) => {
     }
 
     const isMatch = await user.isPasswordMatch(password);
+
     if (!isMatch) {
         throw new ApiError(404, "Invalid username or password"); // Same generic error
     }
-
+    if(!user.isVerified){
+        throw new ApiError(400, "Please verify your email");
+    }
     const token = user.generateToken();
     res.status(200).json(new ApiResponse(200, "User logged in successfully", { user, token }));
 });
