@@ -17,7 +17,16 @@ export const registers= async ({userName,email,password}) => {
         if (existingUser) {
             throw new ApiError(409, "User with emial or username already exists");
         }
-        const user = await User.create({ userName, email, password });
+
+        // generate a 6 digit verification code 
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const user = await User.create({
+            userName, 
+            email, 
+            password,
+            verificationCode: verificationCode,
+            isVerified: false
+        });
         
        return user;
     } catch (error) {

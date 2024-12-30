@@ -5,6 +5,7 @@ import redis from "../services/redis.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiError.js";
+import { sendVerificationEmail } from "../utils/verifyMail.js";
 
 // Register User
 export const register = asyncHandler(async (req, res) => {
@@ -20,7 +21,8 @@ export const register = asyncHandler(async (req, res) => {
     if (!user){
         throw new ApiError(500, "Something went wrong while registering the user")
     }
-    res.status(201).json(new ApiResponse(201, "User registered successfully", { user, token }));
+    await sendVerificationEmail(email, user.verificationCode);
+    res.status(201).json(new ApiResponse(201, "User registered successfully, verification mail sent", { user, token }));
 });
 
 
@@ -68,4 +70,24 @@ export const logout = asyncHandler(async (req, res) => {
 
     await redis.set(token, "logout", "EX", 60 * 60 * 24); // Set token to expire in 24 hours
     res.status(200).json(new ApiResponse(200, "Logout successful"));
+});
+
+//verify user 
+export const verifyEmail = asyncHandler(async (req, res) => {
+    const { email, verificationCode } = req.body;
+    if(!email || !verificationCode){
+        throw new ApiError(400, "All fields are required");
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new ApiError(400, "Invalid verification code");
+    }
+    if(user.verificationCode !== verificationCode){
+        throw new ApiError(400, "Invalid verification code");
+    }
+    user.isVerified = true;
+    //clear code after verification 
+    user.verificationCode = ""; 
+    await user.save();
+    res.status(200).json(new ApiResponse(200, "Email verified successfully"));
 });

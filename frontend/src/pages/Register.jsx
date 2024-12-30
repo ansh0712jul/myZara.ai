@@ -28,19 +28,18 @@ const Register = () => {
   });
 
   // submit handler
-  function submithandler(e) {
-    e.preventDefault();
-
-    axios.post("/user/register", {userName: username, email, password})
-        .then( (res) =>{
-          console.log(res.data);
-          localStorage.setItem("token", res.data.token);
-          setUser(res.data.user);
-          navigate("/");
-        })
-        .catch((err) => console.log(err));
-    
+  function submithandler(data) {
+    axios
+      .post("/user/register", { userName: data.userName, email: data.email, password: data.password })
+      .then((res) => {
+        console.log(res.data);
+        localStorage.setItem("token", res.data.token);
+        setUser(res.data.user);
+        navigate("/verify-email");
+      })
+      .catch((err) => console.log(err));
   }
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">

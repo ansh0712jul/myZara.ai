@@ -9,6 +9,7 @@ import { validateRequest } from "../middlewares/validation.middleware.js";
 const router = Router();
 
 router.post("/register",validateRequest(signUpSchema) , userController.register);
+router.post("/verify-email", userController.verifyEmail);
 router.post("/login", validateRequest(signInSchema), userController.login);
 router.get("/profile",authMiddleware.auth, userController.profile);
 router.get("/logout",authMiddleware.auth, userController.logout);

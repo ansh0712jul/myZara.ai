@@ -30,6 +30,14 @@ const userSchema = new mongoose.Schema(
             maxlength: [20, "Password must be at most 20 characters long"],
             select: false,
         },
+        verificationCode:{
+            type:String,
+            trim:true
+        },
+        isVerified: {
+            type: Boolean,
+            default: false
+        }
     },
     { timestamps: true }
 );
