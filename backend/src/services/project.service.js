@@ -8,15 +8,15 @@ export const createProject = async ({
 }) =>{
     try {
         if(
-            [ projectName, userId].some((item) => !item || item.trim() ==="")
+            [ projectName, userId].some((item) => !item || item.trim ==="")
         ){
             throw new ApiError(400, "All fields are required")
         }
 
         // check userId should be of type ObjectId
-        if(!mongoose.Types.ObjectId.isValid(userId)){
-            throw new ApiError(400, "Invalid user id");
-        }
+        // if(!mongoose.Types.ObjectId.isValid(userId)){
+        //     throw new ApiError(400, "Invalid user id");
+        // }
 
         // checking project name should not exist in db 
         const existingProject = await Project.findOne({ projectName });
