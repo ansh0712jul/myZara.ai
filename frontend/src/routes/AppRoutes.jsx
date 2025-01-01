@@ -1,3 +1,4 @@
+import Home from '@/pages/Home'
 import LandingPage from '@/pages/LandingPage'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
@@ -12,6 +13,7 @@ const AppRoutes = () => {
             <Route path='/' element={<LandingPage/>}/>
             <Route path='/register' element={<Register/>}/>
             <Route path='/login' element={<Login/>}/>
+            <Route path='/home' element={<Home/>}/>
             <Route path='/verify-email' element={<Verify/>}/>
         </Routes>
     </BrowserRouter>

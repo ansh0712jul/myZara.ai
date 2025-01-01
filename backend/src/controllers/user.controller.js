@@ -55,7 +55,11 @@ export const login = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Please verify your email");
     }
     const token = user.generateToken();
+<<<<<<< HEAD
     console.log(token);
+=======
+    console.log(token)
+>>>>>>> b15ecb96bd887782be97a7faaf6f04ea76c8a3c3
     res.status(200).json(new ApiResponse(200, "User logged in successfully", { user, token }));
 });
 

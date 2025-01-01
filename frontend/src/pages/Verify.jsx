@@ -1,7 +1,4 @@
 import React,{ useState } from "react";
-// import { zodResolver } from "@hookform/resolvers/zod"
-// import { useForm } from "react-hook-form";
-// import { loginSchema } from "@/schemas/loginSchema";
 import axios from "../config/axios"
 import { Link , useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -16,23 +13,13 @@ const Verify = () => {
   const[verificationCode, setverificationCode] = useState("");
 
   const navigate = useNavigate();
-
-//   // Initialize react-hook-form with Zod resolver
-//      const {
-//       register,
-//       handleSubmit,
-//       formState: { errors },
-//     } = useForm({
-//       resolver: zodResolver(loginSchema),
-//     });
-
-// handle login form submission 
+ 
   function handleVerification (e) {
     e.preventDefault();
     axios.post("/user/verify-email", {email,verificationCode})
         .then( (res) =>{
           console.log(res.data);
-          navigate("/");
+          navigate("/home");
         })
         .catch((err) => console.log("invalid verification code",err));
   }
@@ -41,8 +28,7 @@ const Verify = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
       <Card className="w-full max-w-md bg-gray-800 shadow-lg">
         <CardHeader className="text-center">
-          <h1 className="text-3xl font-bold text-gray-100">Verify Your Email</h1>
-          
+          <h1 className="text-3xl font-bold text-gray-100">Verify Your Email</h1> 
         </CardHeader>
         <CardContent>
           <form className="space-y-6"
@@ -58,17 +44,7 @@ const Verify = () => {
                 placeholder="Enter your Email"
                 className="mt-1 w-full"
                 value={email}
-               
                 />
-                {/* {
-                errors.userName && (
-                  <p className="text-[11px] text-red-600 mt-1 mx-2">
-                    {
-                      errors.userName.message
-                    }
-                  </p>
-                )
-              } */}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-400">
@@ -81,17 +57,7 @@ const Verify = () => {
                 type="string"
                 placeholder="Enter your Code"
                 className="mt-1 w-full"
-              
               />
-              {/* {
-                errors.password && (
-                  <p className="text-[11px] text-red-600 mt-1 mx-2">
-                    {
-                      errors.password.message
-                    }
-                  </p>
-                )
-              } */}
             </div>
             <Button
               type="submit"

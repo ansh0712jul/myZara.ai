@@ -33,8 +33,8 @@ const Register = () => {
       .post(`${import.meta.env.VITE_BASE_URL}/user/register`, { userName: data.userName, email: data.email, password: data.password })
       .then((res) => {
         console.log(res.data);
-        localStorage.setItem("token", res.data.token);
-        setUser(res.data.user);
+        localStorage.setItem('token', res.data.token)
+        setUser(res.data.user)
         navigate("/verify-email");
       })
       .catch((err) => console.log(err));

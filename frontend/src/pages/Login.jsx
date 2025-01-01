@@ -37,10 +37,11 @@ const Login = () => {
     })
         .then( (res) =>{
           console.log(res.data);
-          localStorage.setItem("token", res.data.token);
+          localStorage.setItem('token', res.data.message.token)
+
           // making user available to other components
           setUser(res.data.user);
-          navigate("/");
+          navigate("/home");
         })
         .catch((err) => console.log(err));
   }
