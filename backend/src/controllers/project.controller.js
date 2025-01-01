@@ -71,13 +71,15 @@ export const getProjectByIds = asyncHandler(async (req, res) => {
     }
 });
 
-export const projectByUser =  asyncHandler( async (req,res) =>{
-    const { userId } = req.params;
-    if(!userId || !mongoose.Types.ObjectId.isValid(userId)){
-        throw new ApiError(400, "Invalid user id");
-    }
-     
-    const projects =await getProjectByUserId({userId});
-    res.status(200).json(new ApiResponse(200, "Project fetched successfully", projects));
 
-})
+export const getAllProjectByUser = asyncHandler(async (req, res) => {
+       
+            const loggedInUser = await User.findOne({ email: req.user.email });
+            const userId = loggedInUser._id;
+            console.log("User ID for fetching projects:", userId);
+            const projects = await getAllProjects({ userId });
+    
+            res.status(200).json(new ApiResponse(200, "Projects created by user fetched successfully", projects));
+          
+      
+});

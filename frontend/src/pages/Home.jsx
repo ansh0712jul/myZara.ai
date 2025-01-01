@@ -5,33 +5,21 @@ import axios from '@/config/axios';
 import CardComponent from '@/shared/CardComponent';
 import { useNavigate } from 'react-router-dom';
 
+
 const Home = () => {
   const { user } = useContext(userContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [projects, setProjects] = useState([]);
-  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch id from user profile
   useEffect(() => {
-    // Fetch user profile to get userId
-    axios.get(`${import.meta.env.VITE_BASE_URL}/user/profile`)
+    axios.get(`${import.meta.env.VITE_BASE_URL}/projects/get-project`)
       .then(res => {
-        setUserId(res.data.message.user.id);
+        setProjects(res.data.message);
       })
       .catch((err) => console.log(err));
+      
   }, []);
-
-  // Fetch projects after userId is set
-  useEffect(() => {
-    if (userId) {
-      axios.get(`${import.meta.env.VITE_BASE_URL}/projects/${userId}`)
-        .then(res => {
-          setProjects(res.data.message);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [userId]); 
 
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
