@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import Project from "../models/Project.model.js";
-import { createProject, getAllProjects, addUserToProject, getProjectById } from "../services/project.service.js";
+import { createProject, getAllProjects, addUserToProject, getProjectById, getProjectByUserId } from "../services/project.service.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
@@ -70,3 +70,14 @@ export const getProjectByIds = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Something went wrong while fetching project");
     }
 });
+
+export const projectByUser =  asyncHandler( async (req,res) =>{
+    const { userId } = req.params;
+    if(!userId || !mongoose.Types.ObjectId.isValid(userId)){
+        throw new ApiError(400, "Invalid user id");
+    }
+     
+    const projects =await getProjectByUserId({userId});
+    res.status(200).json(new ApiResponse(200, "Project fetched successfully", projects));
+
+})

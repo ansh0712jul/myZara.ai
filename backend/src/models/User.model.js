@@ -60,7 +60,7 @@ userSchema.methods.isPasswordMatch = async function (enteredPassword) {
 };
 
 userSchema.methods.generateToken = function () {
-    return jwt.sign({ email:this.email }, process.env.JWT_SECRET,{expiresIn:'24h'});
+    return jwt.sign({ email:this.email , id: this._id }, process.env.JWT_SECRET,{expiresIn:'24h'});
 };
 
 const User = mongoose.model("User", userSchema);

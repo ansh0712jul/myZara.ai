@@ -8,10 +8,12 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import axios from '@/config/axios';
+import { useNavigate } from 'react-router-dom';
 
 const CreateProjectModal = ({ isOpen, onClose }) => {
     const [projectName, setProjectName] = useState('');
     const [description, setDescription] = useState('');
+    const navigate = useNavigate()
 
     const handleCreate = (e) => {
         e.preventDefault();
@@ -24,6 +26,7 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
             })
             .then((res) => {
                 console.log(res);
+                navigate(0)
                 onClose();
             })
             .catch((err) => console.log(err));

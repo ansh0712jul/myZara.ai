@@ -125,3 +125,21 @@ export const getProjectById = async ({ projectId }) => {
         throw new ApiError(500, "An error occurred while fetching project", "", { err: error.message });
     }
 }
+
+export const getProjectByUserId = async ({ userId }) => {
+    try{
+        if(!userId){
+            throw new ApiError(400, "User id is required");
+        }
+
+        const projects = await Project.find({ owner : userId }); 
+        console.log("projects", projects);
+       
+        return projects;
+
+    } catch (error) {
+        console.log(" error occur while fetching project", error);
+        throw new ApiError(500, "An error occurred while fetching project", "", { err: error.message });
+
+    }
+}
