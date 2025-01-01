@@ -48,7 +48,12 @@ const Home = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
         {
           projects.map((project) => (
-            <CardComponent key={project._id} project={project} />
+            // sending complete project data to project page without using prop 
+            <CardComponent key={project._id} project={project} onClick = { () =>{
+              navigate("/projects",{
+                state:{project}
+              })
+            }} />
           ))
         }
       </div>

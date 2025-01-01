@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 
-const CardComponent = ({ project }) => {
+const CardComponent = ({ project, onClick }) => {
   return (
-    <div className="transition-transform transform hover:scale-105">
+    <div className="transition-transform transform hover:scale-105" onClick={onClick}>
       <Card className="bg-white shadow-xl rounded-lg hover:shadow-2xl transition-shadow duration-300">
         <CardContent className="p-6">
           <div className="flex justify-between mb-4">
