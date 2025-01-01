@@ -1,116 +1,55 @@
 import { userContext } from '@/contextApi/User.context';
-import React, { useContext, useState } from 'react';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import React, { useContext, useState, useEffect } from 'react';
+import CreateProjectModal from '../dialog/CreateProjectModal';
 import axios from '@/config/axios';
-
+import CardComponent from '@/shared/CardComponent';
 
 const Home = () => {
-    const { user } = useContext(userContext);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [projectName, setProjectName] = useState('');
-    const [description, setDescription] = useState('');
+  const { user } = useContext(userContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [projects, setProjects] = useState([]);
 
-    const handleCreate = (e) => {
-        e.preventDefault();
-        console.log({projectName, description});
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_BASE_URL}/projects/all`)
+      .then(res => {
+        setProjects(res.data.message);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
-        axios.post(`${import.meta.env.VITE_BASE_URL}/projects/create`,{
-            projectName,
-            description
-        })
-        .then((res) => {
-            console.log(res);
-            setIsModalOpen(false);
-        })
-        .catch((err) => console.log(err));
-    };
+  return (
+    <main className="p-8 bg-gray-50 min-h-screen">
+      <div className="projects max-w-5xl mx-auto mt-10">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-bold text-gray-900">
+            Welcome, {user?.userName || 'User'}!
+          </h1>
+          <p className="text-gray-700 mt-2 text-lg">
+            Manage your projects effortlessly. Start by creating a new project.
+          </p>
+        </div>
+        <div className="flex justify-center mb-10">
+          <button
+            className="bg-blue-600 text-white border border-blue-600 rounded-lg py-3 px-8 shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-200 flex items-center space-x-2"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <span className="text-lg font-medium">Create Project</span>
+            <i className="ri-add-large-fill mt-1"></i>
+          </button>
+        </div>
+      </div>
 
-    return (
-        <main className="p-6 bg-gray-100 min-h-screen">
-            <div className="projects max-w-4xl mx-auto">
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-800">
-                        Welcome, {user?.userName || 'User'}!
-                    </h1>
-                    <p className="text-gray-600 mt-2">
-                        Manage your projects effortlessly. Start by creating a new project.
-                    </p>
-                </div>
-                <div className="flex justify-center">
-                    <button
-                        className="project bg-white border border-gray-300 rounded-lg p-6 shadow-md hover:shadow-lg hover:bg-gray-100 transition-all duration-200 flex items-center space-x-2"
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        <span className="text-lg font-medium text-gray-800">Create Project</span>
-                        <i className="ri-add-line text-xl text-blue-500"></i>
-                    </button>
-                </div>
-            </div>
-            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle className="text-xl text-center">Create Your Project</DialogTitle>
-                        <DialogDescription className="text-lg text-gray-500 text-center">
-                            Fill in the details below to create your project.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleCreate} className="space-y-6 mt-4">
-                        <div className='mt-4'>
-                            <label className="block text-lg  text-gray-700">
-                                Project Name
-                            </label>
-                            <input
-                                className="mt-3 h-10 block w-full p-3 rounded-md"
-                                type="text"
-                                name="projectName"
-                                value={projectName}
-                                placeholder="Enter your project name"
-                                onChange={(e) => setProjectName(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className='mt-4'>
-                            <label className="block text-lg  text-gray-700 ">
-                                Description
-                            </label>
-                            <textarea
-                                className="mt-3 p-3 block w-full rounded-md "
-                                name="description"
-                                value={description}
-                                placeholder="Enter your project description"
-                                rows={4}
-                                onChange={(e) => setDescription(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="flex justify-end space-x-4">
-                            <Button
-                                type="button"
-                                variant="secondary"
-                                onClick={() => setIsModalOpen(false)}
-                                className="bg-gray-200 text-gray-800 hover:bg-gray-300"
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                type="submit"
-                                className="bg-blue-500 text-white hover:bg-blue-600"
-                            >
-                                Create
-                            </Button>
-                        </div>
-                    </form>
-                </DialogContent>
-            </Dialog>
-        </main>
-    );
+      <CreateProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
+        {
+          projects.map((project) => (
+            <CardComponent key={project._id} project={project} />
+          ))
+        }
+      </div>
+    </main>
+  );
 };
 
 export default Home;

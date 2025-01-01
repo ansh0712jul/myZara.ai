@@ -2,7 +2,7 @@ import { Router } from "express";
 import * as projectController from "../controllers/project.controller.js";
 import * as authMiddleware from "../middlewares/auth.middleware.js";
 import { body } from "express-validator";
-import User from "../models/User.model.js";
+
 
 const router = Router();
 
