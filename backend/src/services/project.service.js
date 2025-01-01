@@ -29,7 +29,8 @@ export const createProject = async ({
         const project = await Project.create({
             projectName,
             description,
-            usersInvolved: [userId]
+            usersInvolved: [userId],
+            owner: userId
         })
         return project;
 
