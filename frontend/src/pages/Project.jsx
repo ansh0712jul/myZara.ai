@@ -1,19 +1,28 @@
 import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom'
+import SelectUser from '@/dialog/SelectUser';
 
 
 const Project = () => {
     const location = useLocation();
     console.log(location.state);
+
+    //for set Side panel 
     const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+    // for set Select Use Modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <main className='h-screen w-screen flex'>
         <section className='left-section relative flex flex-col h-full min-w-[400px] bg-gray-600'>
            <header className='w-full h-14 p-2 px-4 flex items-center justify-between bg-gray-300'>
-           <button className='flex gap-1 items-center text-white'>
+           <button 
+                onClick={() => setIsModalOpen(true)}
+                className='flex gap-1 items-center text-white'>
                 <i className="ri-link text-xl"></i>
                 Add Collaborator 
             </button>
+
             <button
             // toggling the panel
                 onClick={() => setIsPanelOpen(!isPanelOpen)}
@@ -64,6 +73,24 @@ const Project = () => {
            </div>
 
         </section>
+        
+        
+            {/* Modal for SelectUser */}
+            {isModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="relative">
+                        <button
+                            onClick={() => setIsModalOpen(false)}
+                            className="absolute top-2 right-2 text-white text-xl">
+                            <i className="ri-close-fill"></i>
+                        </button>
+                            <SelectUser  onClose={() => setIsModalOpen(false)} />
+                    </div>
+                </div>
+            )}
+
+        
+        
 
     </main>
    
