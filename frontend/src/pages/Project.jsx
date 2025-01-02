@@ -6,7 +6,7 @@ import axios from '@/config/axios';
 
 const Project = () => {
     const location = useLocation();
-    console.log(location.state);
+    // console.log(location.state);
 
     //for set Side panel 
     const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -16,19 +16,25 @@ const Project = () => {
 
     const [user, Setuser] = useState([]);
 
+    // for getting userInvolved in project collection 
+    const [project, setProject] = useState([]);
+
     // fetching all users 
    useEffect( () =>{
-     axios.get(`${import.meta.env.VITE_BASE_URL}/user/all`)
+    axios.get(`${import.meta.env.VITE_BASE_URL}/projects/get-project/${location.state.project._id}`)
+    .then(res => {
+        setProject(res.data.message.usersInvolved);
+    })
+    .catch((err) => console.log(err));
+    axios.get(`${import.meta.env.VITE_BASE_URL}/user/all`)
     .then(res => { 
         Setuser(res.data.message);
-        console.log(user);
+        // console.log(user);
 
     })
     .catch((err) => console.log(err));
    },[])
-//    useEffect(() => {
-//     console.log("Updated user state:", user);
-//   }, [user]);
+
 
 
 
@@ -80,15 +86,21 @@ const Project = () => {
                     </button>
                 </header>
                 <div className='users flex flex-col gap-3 mt-7'>
-                    <div className="user h-12 
+                    {
+                        project.map((user,index) =>{
+                            return (
+                                <div key={index} className="user h-12 
                         mx-auto rounded-lg  
                         w-4/5 p-2 px-4 bg-slate-50 flex items-center gap-2">
                         <div className='h-8 w-8 bg-gray-700 rounded-full text-white p-1 flex items-center justify-center'>
                         <i className="ri-user-follow-fill text-xl"></i>
                         </div>
-                        <h3 className='text-sm'>anshagrawal181@gmail.com</h3>
+                        <h3 className='text-sm'>{user.email}</h3>
 
                     </div>
+                            )
+                        })
+                    }
                 </div>
                 
            </div>
