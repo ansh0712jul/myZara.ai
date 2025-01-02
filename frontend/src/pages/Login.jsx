@@ -36,11 +36,11 @@ const Login = () => {
       userName:data.userName,password: data.password
     })
         .then( (res) =>{
-          console.log(res.data);
+          
           localStorage.setItem('token', res.data.message.token)
 
           // making user available to other components
-          setUser(res.data.user);
+          setUser(res.data.message.user);
           navigate("/home");
         })
         .catch((err) => console.log(err));

@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState , useContext, createRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import SelectUser from '@/dialog/SelectUser';
 import axios from '@/config/axios';
+import { initializeSocket,
+         receiveMessage,
+         sendMessage
+ } from '@/config/socket';
+ import { userContext } from '@/contextApi/User.context';
 
 
 const Project = () => {
@@ -14,30 +19,86 @@ const Project = () => {
     // for set Select Use Modal
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const [user, Setuser] = useState([]);
+    const [User, Setuser] = useState([]);
 
     // for getting userInvolved in project collection 
     const [project, setProject] = useState([]);
 
-    // fetching all users 
-   useEffect( () =>{
-    axios.get(`${import.meta.env.VITE_BASE_URL}/projects/get-project/${location.state.project._id}`)
-    .then(res => {
-        setProject(res.data.message.usersInvolved);
-    })
-    .catch((err) => console.log(err));
-    axios.get(`${import.meta.env.VITE_BASE_URL}/user/all`)
-    .then(res => { 
-        Setuser(res.data.message);
-        // console.log(user);
+    const [msg , setMsg] = useState('');
 
-    })
+    const { user } = useContext(userContext);
+
+    const messageBox = createRef();
+
+    const sendMsg = () => {
+        sendMessage('project-message', {
+            message: msg,
+            sender: user,
+        });
+        appendOutgoingMessage({ message: msg, sender: user });
+        setMsg('');
+
+    }
+
+    // fetching all users 
+   useEffect( () => {
+    console.log(project);
+    console.log('location waala array ',location.state.project._id);
+        initializeSocket(location.state.project._id);
+
+        receiveMessage('project-message', (data) => {
+            console.log(data);
+            appendIncomingMessage(data);
+        });
+        
+    
+
+        axios.get(`${import.meta.env.VITE_BASE_URL}/projects/get-project/${location.state.project._id}`)
+        .then(res => {
+            setProject(res.data.message.usersInvolved);
+        })
+        .catch((err) => console.log(err));
+
+
+        axios.get(`${import.meta.env.VITE_BASE_URL}/user/all`)
+        .then(res => { 
+            Setuser(res.data.message);
+            // console.log(user);
+
+        })
     .catch((err) => console.log(err));
    },[])
 
 
+   function appendIncomingMessage(messageObject) {
+       const messageBox = document.querySelector('.message-box');
+       const messageElement = document.createElement('div');
+       messageElement.classList.add('incoming', 'message', 'max-w-60', 'w-fit', 'bg-red-50', 'p-2', 'px-4', 'rounded-sm', 'flex', 'flex-col');
+       messageElement.innerHTML = `
+       <small class="opacity-50 text-xs">${messageObject.sender.userName}</small>
+       <p class="text-sm">${messageObject.message}</p>
+       `;
+       messageBox.appendChild(messageElement);
+       scrollToBottom();
+   }
 
+   function appendOutgoingMessage(messageObject) {
+    console.log("msg-->",messageObject);
+       const messageBox = document.querySelector('.message-box');
+       const messageElement = document.createElement('div');
+       messageElement.classList.add('outgoing', 'message', 'max-w-60', 'w-fit', 'ml-auto', 'bg-gray-200', 'p-2', 'px-4', 'rounded-sm', 'flex', 'flex-col');
+       messageElement.innerHTML = `
+       <small class="opacity-50 text-xs">${messageObject.sender.userName}</small>
+       <p class="text-sm">${messageObject.message}</p>
+       `;
+       messageBox.appendChild(messageElement);
+       scrollToBottom();
+   }
 
+   function scrollToBottom() {
+    messageBox.current.scrollTop = messageBox.current.scrollHeight;
+
+   }
 
   return (
     <main className='h-screen w-screen flex'>
@@ -59,20 +120,33 @@ const Project = () => {
             
            </header>
            <div className='conversation-box flex-grow flex flex-col'>
-            <div className='message-box flex flex-grow flex-col p-4 gap-4'>
-                <div className="incoming message max-w-60  w-fit bg-red-50 p-2 px-4 rounded-sm flex flex-col  
-                ">
-                <small className='opacity-50 text-xs'>username</small>
-                <p className='text-sm'> Lorem ipsum dolor sit. Lorem ipsum dolor sit Lorem ipsum dolor sit amet consectetur.</p>
-                </div>
-                <div className="outgoing ml-auto max-w-60 w-fit  bg-gray-200 p-2 px-4 rounded-sm flex flex-col">
-                <small className='opacity-50  text-xs'>Username</small>
-                <p className='text-sm'>Lorem ipsum dolor sit Lorem ipsum dolor sit amet consectetur .</p>
-                </div>
+            <div 
+                ref={messageBox}
+                className='message-box flex flex-grow flex-col p-4 gap-4'>
+                    <div className="incoming message max-w-60  w-fit bg-red-50 p-2 px-4 rounded-sm flex flex-col  
+                    ">
+                    <small className='opacity-50 text-xs'>username</small>
+                    <p className='text-sm'> Lorem ipsum dolor sit. Lorem ipsum dolor sit Lorem ipsum dolor sit amet consectetur.</p>
+                    </div>
+                    <div className="outgoing ml-auto max-w-60 w-fit  bg-gray-200 p-2 px-4 rounded-sm flex flex-col">
+                    <small className='opacity-50  text-xs'>Username</small>
+                    <p className='text-sm'>Lorem ipsum dolor sit Lorem ipsum dolor sit amet consectetur .</p>
+                    </div>
             </div>
             <div className='input-box w-full flex border border-gray-400  '>
-                <input type="text " placeholder='Enter your message' className='  p-2 px-4 border-none outline-none w-[85%]'  />
-                <button className='flex-grow bg-white'><i className="ri-send-plane-line text-2xl"></i></button>
+                <input 
+                    onChange={(e) => setMsg(e.target.value)}
+                    type="text "
+                    value={msg}
+                    placeholder='Enter your message' 
+                    className='  p-2 px-4 border-none outline-none w-[85%]'  
+                />
+                <button 
+                    onClick={sendMsg}
+                    className='flex-grow bg-white'
+                    >
+                        <i className="ri-send-plane-line text-2xl"></i>
+                </button>
             </div>
            </div>
 
@@ -117,7 +191,7 @@ const Project = () => {
                             className="absolute top-2 right-2 text-white text-xl">
                             <i className="ri-close-fill"></i>
                         </button>
-                            <SelectUser  onClose={() => setIsModalOpen(false)} user={user} location={location} />
+                            <SelectUser  onClose={() => setIsModalOpen(false)} user={User} location={location} />
                     </div>
                 </div>
             )}

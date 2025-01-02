@@ -1,3 +1,4 @@
+import UserAuth from '@/auth/UserAuth'
 import Home from '@/pages/Home'
 import LandingPage from '@/pages/LandingPage'
 import Login from '@/pages/Login'

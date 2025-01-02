@@ -26,7 +26,7 @@ const Home = () => {
       <div className="projects max-w-5xl mx-auto mt-10">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-gray-900">
-            Welcome, {user?.userName || 'User'}!
+            Welcome, {user.userName }!
           </h1>
           <p className="text-gray-700 mt-2 text-lg">
             Manage your projects effortlessly. Start by creating a new project.
