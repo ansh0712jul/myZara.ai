@@ -44,7 +44,25 @@ io.on('connection', socket => {
     console.log('a user connected');
     socket.join(socket.project._id);
     socket.on('project-message', data => {
-        socket.broadcast.to (socket.project._id).emit('project-message', data);
+
+        const msg = data.message;
+        const msgContainAi = msg.includes('@ai');
+        if(msgContainAi){
+            const prompt = msg.replace('@ai','');
+            socket.emit('project-message', {
+                sender: data.sender,
+                message: 'AI is processing your request'
+            });
+            // const content = await ai.generateContent(prompt);
+            // socket.emit('project-message', {
+            //     message: content
+            // });
+            return;
+        }
+
+        socket.broadcast.to (socket.project._id).emit('project-message', {
+            
+        });
     });
   socket.on('event', data => { /* … */ });
   socket.on('disconnect', () => { /* … */ });

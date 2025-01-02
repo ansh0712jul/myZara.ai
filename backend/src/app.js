@@ -28,11 +28,13 @@ app.use(cookieParser())
 // import  routes  
 import userRouter from "../src/routes/user.routes.js"
 import projectRoutes from "../src/routes/project.routes.js"
+import aiRoutes from "../src/routes/ai.routes.js"
 
 
 // routes declaration
 app.use("/user",userRouter);
 app.use("/projects",projectRoutes);
+app.use("/ai",aiRoutes);
 
 
 // global error handler middleware
