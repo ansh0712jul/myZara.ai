@@ -33,3 +33,9 @@ export const registers= async ({userName,email,password}) => {
         throw new ApiError(500, "An error occurred", "", { err: error.message });
     }
 }
+
+export const getAllUsersById = async ({userId}) => {
+    const users = await User.find({ _id: { $ne: userId } });
+    return users
+
+}

@@ -6,19 +6,41 @@ import {
     CardFooter,
     CardTitle
 } from '@/components/ui/card';
+import axios from '@/config/axios';
 
-const SelectUser = ({ onClose }) => {
+const SelectUser = ({ onClose , user , location}) => {
+  
   const [selectedUser, setSelectedUser] = useState([]);
 
-  const toggleUser = (index) => {
-    if (selectedUser.includes(index)) {
-      setSelectedUser(selectedUser.filter((item) => item !== index));
+
+  const toggleUser = (id) => {
+    if (selectedUser.includes(id)) {
+      setSelectedUser(selectedUser.filter((item) => item !== id));
     } else {
-      setSelectedUser([...selectedUser, index]);
+      setSelectedUser([...selectedUser, id]);
     }
   };
-
   console.log(selectedUser);
+
+
+  // add users to project to db
+    function addCollaboratorToProject() {
+      console.log(location.state);
+      
+        axios.put(`${import.meta.env.VITE_BASE_URL}/projects/add-user`, 
+            { 
+                projectId: location.state.project._id, 
+                Users: [...selectedUser] 
+            })
+            .then( (res) =>{
+                console.log(res);
+                onClose();
+            }
+               
+            )
+            .catch((err) => console.log(err));
+        
+    }
 
   return (
     <Card className="h-[520px] w-96 bg-white shadow-xl rounded-lg hover:shadow-2xl transition-shadow duration-300">
@@ -31,27 +53,32 @@ const SelectUser = ({ onClose }) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="max-h-96 overflow-auto w-full">
-        {[...Array(9)].map((_, index) => (
+        {user.map((item) => (
           <div
-            key={index}
-            className="user h-12 mx-auto rounded w-full p-2 px-4 bg-white hover:bg-gray-300 flex items-center gap-5"
+            key={item._id}
+            className="user h-12 mx-auto rounded w-full p-2 px-4 bg-white hover:bg-gray-300 flex items-center  gap-5"
           >
             <div className="h-8 w-8 bg-gray-700 rounded-full text-white p-1 flex items-center justify-center">
               <i className="ri-user-follow-fill text-xl"></i>
             </div>
-            <h3 className="text-sm">anshagrawal181@gmail.com</h3>
-            <button onClick={() => toggleUser(index)}>
-              {selectedUser.includes(index) ? (
-                <i class="ri-indeterminate-circle-line text-xl"></i>
+            <h3 className="text-sm max-w-40 items-start  ">{item.email}</h3>
+            <button onClick={() => toggleUser(item._id)}
+            className='flex-grow '
+              >
+              {selectedUser.includes(item._id) ? (
+                <i className="ri-indeterminate-circle-line text-xl"></i>
               ) : (
-                <i class="ri-add-circle-fill text-xl"></i>
+                <i className="ri-add-circle-fill text-xl"></i>
               )}
             </button>
           </div>
         ))}
       </CardContent>
-      <CardFooter className="flex items-center justify-center">
-        <button className="flex items-center justify-center p-2 px-4 bg-blue-600 text-white rounded">
+      <CardFooter className="flex items-center justify-center ">
+        <button 
+          onClick={addCollaboratorToProject}
+          className="flex  items-center justify-center p-2 px-4 bg-blue-600 text-white rounded "
+        >
           Add Collaborators
         </button>
       </CardFooter>

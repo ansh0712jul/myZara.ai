@@ -1,5 +1,5 @@
 import User from "../models/User.model.js";
-import { registers } from "../services/user.service.js";
+import { getAllUsersById, registers } from "../services/user.service.js";
 import { validationResult } from "express-validator";
 import redis from "../services/redis.service.js";
 import asyncHandler from "../utils/asyncHandler.js";
@@ -80,6 +80,18 @@ export const logout = asyncHandler(async (req, res) => {
     await redis.set(token, "logout", "EX", 60 * 60 * 24); // Set token to expire in 24 hours
     res.status(200).json(new ApiResponse(200, "Logout successful"));
 });
+
+// get all user 
+export const getAllUsers = asyncHandler(async (req, res) =>{
+    const loggedInUser = await User.findOne({email:req.user.email});
+    if(!loggedInUser){
+        throw new ApiError(401, "Unauthorized");
+    }
+    const allUsers = await getAllUsersById({userId :loggedInUser._id});
+    res.status(200).json(new ApiResponse(200, "All users fetched successfully", allUsers));
+   
+
+})
 
 //verify user 
 export const verifyEmail = asyncHandler(async (req, res) => {

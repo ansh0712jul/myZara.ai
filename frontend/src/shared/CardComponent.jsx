@@ -12,12 +12,13 @@ const CardComponent = ({ project, onClick }) => {
             </h3>
             {
               project.usersInvolved.length > 1 ? (
-                <i className="ri-group-fill text-3xl text-blue-600"></i>
-              ) : <i className="ri-user-fill text-3xl text-blue-600"></i>
+                <i className="ri-group-fill text-3xl text-blue-600">{project.usersInvolved.length}</i>
+              ) : <i className="ri-user-fill text-3xl text-blue-600">{project.usersInvolved.length}</i>
             }
           </div>
           <div className="flex items-start space-x-3">
-            <i className="ri-article-fill text-5xl text-blue-500"></i>
+           
+            <i className="ri-article-fill text-5xl text-blue-500"> </i>
             <p className="text-gray-600 text-lg">
               {project.description.length > 0 ? project.description : "No description available"}
             </p>

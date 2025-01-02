@@ -13,4 +13,5 @@ router.post("/verify-email", userController.verifyEmail);
 router.post("/login", validateRequest(signInSchema), userController.login);
 router.get("/profile",authMiddleware.auth, userController.profile);
 router.get("/logout",authMiddleware.auth, userController.logout);
+router.get("/all",authMiddleware.auth, userController.getAllUsers);
 export default router;

@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import SelectUser from '@/dialog/SelectUser';
+import axios from '@/config/axios';
 
 
 const Project = () => {
@@ -12,6 +13,26 @@ const Project = () => {
 
     // for set Select Use Modal
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [user, Setuser] = useState([]);
+
+    // fetching all users 
+   useEffect( () =>{
+     axios.get(`${import.meta.env.VITE_BASE_URL}/user/all`)
+    .then(res => { 
+        Setuser(res.data.message);
+        console.log(user);
+
+    })
+    .catch((err) => console.log(err));
+   },[])
+//    useEffect(() => {
+//     console.log("Updated user state:", user);
+//   }, [user]);
+
+
+
+
   return (
     <main className='h-screen w-screen flex'>
         <section className='left-section relative flex flex-col h-full min-w-[400px] bg-gray-600'>
@@ -84,7 +105,7 @@ const Project = () => {
                             className="absolute top-2 right-2 text-white text-xl">
                             <i className="ri-close-fill"></i>
                         </button>
-                            <SelectUser  onClose={() => setIsModalOpen(false)} />
+                            <SelectUser  onClose={() => setIsModalOpen(false)} user={user} location={location} />
                     </div>
                 </div>
             )}
