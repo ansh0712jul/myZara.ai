@@ -1,68 +1,82 @@
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 import { app } from "./app.js";
 import connectDB from "./db/index.js";
 import http from 'http';
 import { Server } from "socket.io";
 import jwt from 'jsonwebtoken';
-import project from "../src/models/Project.model.js";
 import mongoose from "mongoose";
+import Project from "./models/Project.model.js";
 
 dotenv.config({
-    path:'./env'
-})
+    path: './.env'
+});
+
 const server = http.createServer(app);
-const io = new Server(server,{
-    cors:{  
-        origin:'*'
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:5173/'
     }
 });
 
-io.use(async(socket, next)=>{
+io.use(async (socket, next) => {
     try {
-
-        const token = socket.handshake.auth?.token || socket.handshake.headers.authorization?.split(' ')[1];
-
+        // Extract token and projectId from the handshake
+        const token = socket.handshake.auth.token || socket.handshake.headers.authorization.split(' ')[1];
         const projectId = socket.handshake.query.projectId;
-        console.log("indexedDB.js "+projectId);
-        if(!projectId || mongoose.Types.ObjectId.isValid(projectId)){
-            return next(new Error('Project id is required'));
-        } 
-        
-        socket.project = await project.findById(projectId);
-        console.log("socket.project "+socket);
-        
-        if(!token){
-            return next(new Error('Authentication error'));
+
+        // Validate projectId
+        if (!mongoose.Types.ObjectId.isValid(projectId)) {
+            return next(new Error('Invalid project id'));
         }
+
+        // Find the project associated with the projectId
+        const project = await Project.findById(projectId).toString();
+        if (!project) {
+            return next(new Error('Project not found'));
+        }
+
+        // Validate token
+        if (!token) {
+            return next(new Error('Authentication error: No token provided'));
+        }
+
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if(!decoded){
-            return next(new Error('Authentication error'));
+
+        if (!decoded) {
+            return next(new Error('Authentication error: Invalid token'));
         }
-        socket.user = decoded.user;
+
+        // Attach project and user to the socket object
+        socket.project = project;
+        socket.user = decoded;
+
         next();
     } catch (error) {
-        next(new Error('Authentication error'));
+        console.error('Socket middleware error:', error);
+        next(error); // Pass the error to the next middleware
     }
-})
+});
 
-io.on('connection', socket => {
-    console.log('a user connected');
+io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
+    
+    console.log(socket.project._id)
+
+    // Join the socket to the project room
     socket.join(socket.project._id);
-
-
-    socket.on('project-message', data=> {
-        socket.broadcast.to(socket.project._id).emit('project-message',data);
+    console.log(`User ${socket.id} joined room ${socket.project._id}`);
+    socket.on('project-message', data =>{
+        socket.broadcast.to(socket.project._id).emit('project-message', data);
+        console.log(data);
     })
 
-  socket.on('event', data => { /* … */ });
-  socket.on('disconnect', () => { /* … */ });
+    
 });
 
 connectDB()
-.then(()=>{
-    server.listen(process.env.PORT || 8080,()=>{
-        console.log(`server is listening at port : ${process.env.PORT}`)
-
+    .then(() => {
+        server.listen(process.env.PORT || 8080, () => {
+            console.log(`Server is listening at port: ${process.env.PORT}`);
+        });
     })
-})
-.catch((err)=> console.log('MongoDb connection failed!!',err))
+    .catch((err) => console.log('MongoDB connection failed:', err));
