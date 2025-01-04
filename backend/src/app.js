@@ -7,9 +7,9 @@ import { errorMiddleware } from "./middlewares/error.middleware.js"
 
 
 
-const app=express()
+const app=express();
 
-app.use(morgan('dev'))
+app.use(morgan('dev'));
 
 app.use(cors({
     origin:process.env.CORS_ORIGIN, // only allow http://localhost:5173
@@ -31,10 +31,14 @@ import projectRoutes from "../src/routes/project.routes.js"
 import aiRoutes from "../src/routes/ai.routes.js"
 
 
-// routes declaration
+// routes declaration hlooo every one
 app.use("/user",userRouter);
 app.use("/projects",projectRoutes);
 app.use("/ai",aiRoutes);
+
+
+
+
 
 
 // global error handler middleware
