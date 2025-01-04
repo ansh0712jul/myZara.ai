@@ -41,6 +41,13 @@ const Project = () => {
         messagebox.current.scrollTop = messagebox.current.scrollHeight; // Scroll to the bottom of the message box
     }
 
+    // sending msg on hiting enter
+    const handleSendMsg = (e) =>{
+        if (e.key === "Enter" && msg !== "") {
+            sendMsg();
+        }
+    }
+
     useEffect(() => {
         initializeSocket(location.state?.project._id);
 
@@ -71,18 +78,21 @@ const Project = () => {
                 <header className="w-full h-14 p-2 px-4 flex items-center justify-between bg-gray-300">
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="flex gap-1 items-center text-white"
+                        className="flex gap-1 items-center text-black text-xl font-bold"
                         aria-label="Add Collaborator"
                     >
                         <i className="ri-link text-xl"></i> Add Collaborator
                     </button>
                     <button onClick={() => setIsPanelOpen(!isPanelOpen)} aria-label="Toggle Panel">
-                        <i className="ri-user-2-fill text-2xl"></i>
+                        <i className="ri-user-2-fill text-2xl relative">
+                        <span className="absolute bottom-3 left-1/2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{location.state?.project.usersInvolved.length}</span>
+                
+                        </i>
                     </button>
                 </header>
 
                 {/* Messages */}
-                <div className="conversation-box flex-grow flex flex-col max-h-full overflow-scroll">
+                <div className="conversation-box flex-grow flex flex-col max-h-full overflow-scroll scrollbar-hidden">
                     <div ref={messagebox} className="message-box flex flex-grow flex-col p-4 gap-4 overflow-y-auto">
                         {messages.map((msg, index) => (
                             <div
@@ -100,16 +110,17 @@ const Project = () => {
                     </div>
 
                     {/* Input */}
-                    <div className="input-box w-full flex border border-gray-400">
+                    <div className="input-box w-full flex border h-14 border-gray-400">
                         <input
                             onChange={(e) => setMsg(e.target.value)}
+                            onKeyDown={handleSendMsg}
                             type="text"
                             value={msg}
                             placeholder="Enter your message"
-                            className="p-2 px-4 border-none outline-none w-[85%]"
+                            className=" px-4 border-4 outline-none w-[85%]"
                         />
-                        <button onClick={sendMsg} className="flex-grow bg-white" aria-label="Send Message">
-                            <i className="ri-send-plane-line text-2xl"></i>
+                        <button onClick={sendMsg} className="flex-grow bg-black text-white  h-full " aria-label="Send Message">
+                            <i className="ri-send-plane-line text-2xl   "></i>
                         </button>
                     </div>
                 </div>
@@ -117,8 +128,14 @@ const Project = () => {
 
             {/* Side Panel */}
             {isPanelOpen && (
-                <div className="side-panel w-[400px] h-full bg-slate-500 absolute top-0 left-0">
-                    <header className="w-full h-14 p-2 px-4 flex items-center justify-end bg-gray-300">
+               <div
+               className="side-panel w-[400px] h-full max-h-full bg-slate-500 absolute top-0 left-0 overflow-y-scroll scrollbar-hidden transition-all duration-300 ease-in-out"
+               style={{
+                   transform: isPanelOpen ? "translateX(0)" : "translateX(-100%)",
+               }}
+           >
+                    <header className="w-full h-14 p-2 px-4 flex items-center justify-between bg-gray-300 sticky top-0">
+                        <h1 className="text-2xl font-bold">Collaborators</h1>
                         <button
                             onClick={() => setIsPanelOpen(false)}
                             className="text-white"
@@ -127,15 +144,8 @@ const Project = () => {
                             <i className="ri-close-large-fill text-2xl"></i>
                         </button>
                     </header>
-                    <div className="users flex flex-col gap-3 mt-7 ">
-                        {projectUsers.map((user, index) => (
-                            <div key={index} className="user h-12 mx-auto rounded-lg w-4/5 p-2 px-4 bg-slate-50 flex items-center gap-2">
-                                <div className="h-8 w-8 bg-gray-700 rounded-full text-white p-1 flex items-center justify-center">
-                                    <i className="ri-user-follow-fill text-xl"></i>
-                                </div>
-                                <h3 className="text-sm">{user.email}</h3>
-                            </div>
-                        ))}
+                    <div className="users flex flex-col gap-3 mt-7   ">
+                        
                     </div>
                 </div>
             )}

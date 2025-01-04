@@ -90,6 +90,10 @@ export const addUserToProject = async ({ projectId, Users, UserId }) => {
         if (!project) {
             throw new ApiError(404, "Project not found");
         }
+        // disallowing duplicate users to add in array 
+        if (project.usersInvolved.includes(UserId)) {
+            return project;
+        }
 
         // check if user exists
         const users = await User.find({ _id: { $in: Users } });

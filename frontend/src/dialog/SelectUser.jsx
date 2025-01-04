@@ -58,7 +58,7 @@ const SelectUser = ({ onClose, user, location }) => {
           <input
             type="text"
             placeholder="Search by email..."
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border  outline-none rounded shadow-lg"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />

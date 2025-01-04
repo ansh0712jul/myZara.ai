@@ -70,6 +70,13 @@ io.on('connection', (socket) => {
         console.log(data);
     })
 
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+        console.log(`User ${socket.id} left room ${socket.project._id}`);
+        socket.leave(socket.project._id);
+        
+    })
+
     
 });
 

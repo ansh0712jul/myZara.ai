@@ -37,8 +37,7 @@ export const getAllProject = asyncHandler(async (req, res) => {
 export const addUserToProjects = asyncHandler(async (req, res) => {
     try {
         const { projectId, Users } = req.body;
-        console.log("projectId", projectId);
-        console.log("Users", Users);
+        
         const loggedInUser = await User.findOne({ email: req.user.email });
         const userId = loggedInUser._id;
         console.log("userId", userId);
