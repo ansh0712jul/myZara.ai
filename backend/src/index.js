@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import jwt from 'jsonwebtoken';
 import mongoose from "mongoose";
 import Project from "./models/Project.model.js";
+import { generateContent } from "./services/ai.service.js";
 
 dotenv.config({
     path: './.env'
@@ -65,9 +66,27 @@ io.on('connection', (socket) => {
     // Join the socket to the project room
     socket.join(socket.project._id);
     console.log(`User ${socket.id} joined room ${socket.project._id}`);
-    socket.on('project-message', data =>{
+    socket.on('project-message',async  data =>{
+        const message = data.message;
+        const isAiPresent = message.includes('@ai');
+        if(isAiPresent){
+            const prompt = message.replace('@ai', '');
+
+            const result = await generateContent(prompt);
+            
+
+            io.to(socket.project._id).emit('project-message', {
+                message: result,
+                sender :{
+                    _id: 'ai',
+                    userName: 'zara.ai'
+                }
+
+            })
+            return 
+        }
         socket.broadcast.to(socket.project._id).emit('project-message', data);
-        console.log(data);
+        
     })
 
     socket.on('disconnect', () => {
