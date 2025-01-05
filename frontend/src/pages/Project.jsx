@@ -159,6 +159,20 @@ const Project = () => {
                             <i className="ri-close-large-fill text-2xl"></i>
                         </button>
                     </header>
+
+                    <div className="users flex flex-col gap-3 mt-7">
+                        {projectUsers.map((user, index) => (
+                            <div
+                                key={index}
+                                className="user h-12 mx-auto rounded-lg w-4/5 p-2 px-4 bg-slate-50 flex items-center gap-2"
+                            >
+                                <div className="h-8 w-8 bg-gray-700 rounded-full text-white p-1 flex items-center justify-center">
+                                    <i className="ri-user-follow-fill text-xl"></i>
+                                </div>
+                                <h3 className="text-sm">{user.email}</h3>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
 
