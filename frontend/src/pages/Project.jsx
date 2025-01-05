@@ -4,6 +4,9 @@ import SelectUser from "@/dialog/SelectUser";
 import axios from "@/config/axios";
 import { initializeSocket, receiveMessage, sendMessage } from "@/config/socket";
 import { userContext } from "../contextApi/User.context";
+import Markdown from "markdown-to-jsx";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const Project = () => {
     const location = useLocation();
@@ -11,42 +14,40 @@ const Project = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userList, setUserList] = useState([]);
     const [projectUsers, setProjectUsers] = useState([]);
-    const [messages, setMessages] = useState([]); // Store messages in state
+    const [messages, setMessages] = useState([]);
     const [msg, setMsg] = useState("");
     const { user } = useContext(userContext);
     const messagebox = useRef(null);
 
     const sendMsg = () => {
-        console.log(user);
         const messageObject = {
             sender: user,
             message: msg,
         };
-        sendMessage("project-message", messageObject); // Send message to backend
-        appendOutgoingMessage(messageObject); // Append message to the UI
-        setMsg(""); // Clear input field after sending
+        sendMessage("project-message", messageObject);
+        appendOutgoingMessage(messageObject);
+        setMsg("");
     };
 
-    function appendIncomingMessage(messageObject) {
-        setMessages((prevMessages) => [...prevMessages, messageObject]); // Update state with incoming message
+    const appendIncomingMessage = (messageObject) => {
+        setMessages((prevMessages) => [...prevMessages, messageObject]);
         scrollToBottom();
-    }
+    };
 
-    function appendOutgoingMessage(messageObject) {
-        setMessages((prevMessages) => [...prevMessages, messageObject]); // Update state with outgoing message
+    const appendOutgoingMessage = (messageObject) => {
+        setMessages((prevMessages) => [...prevMessages, messageObject]);
         scrollToBottom();
-    }
+    };
 
-    function scrollToBottom() {
-        messagebox.current.scrollTop = messagebox.current.scrollHeight; // Scroll to the bottom of the message box
-    }
+    const scrollToBottom = () => {
+        messagebox.current.scrollTop = messagebox.current.scrollHeight;
+    };
 
-    // sending msg on hiting enter
-    const handleSendMsg = (e) =>{
+    const handleSendMsg = (e) => {
         if (e.key === "Enter" && msg !== "") {
             sendMsg();
         }
-    }
+    };
 
     useEffect(() => {
         initializeSocket(location.state?.project._id);
@@ -74,7 +75,6 @@ const Project = () => {
     return (
         <main className="h-screen w-screen flex">
             <section className="left-section flex flex-col h-full min-w-[400px] bg-gray-600">
-                {/* Header */}
                 <header className="w-full h-14 p-2 px-4 flex items-center justify-between bg-gray-300">
                     <button
                         onClick={() => setIsModalOpen(true)}
@@ -85,13 +85,13 @@ const Project = () => {
                     </button>
                     <button onClick={() => setIsPanelOpen(!isPanelOpen)} aria-label="Toggle Panel">
                         <i className="ri-user-2-fill text-2xl relative">
-                        <span className="absolute bottom-3 left-1/2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{location.state?.project.usersInvolved.length}</span>
-                
+                            <span className="absolute bottom-3 left-1/2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                {location.state?.project.usersInvolved.length}
+                            </span>
                         </i>
                     </button>
                 </header>
 
-                {/* Messages */}
                 <div className="conversation-box flex-grow flex flex-col max-h-full overflow-scroll scrollbar-hidden">
                     <div ref={messagebox} className="message-box flex flex-grow flex-col p-4 gap-4 overflow-y-auto">
                         {messages.map((msg, index) => (
@@ -104,12 +104,25 @@ const Project = () => {
                                 } max-w-60 w-fit p-2 px-4 rounded-sm flex flex-col`}
                             >
                                 <small className="opacity-50 text-xs">{msg.sender.userName}</small>
-                                <p className="text-sm">{msg.message}</p>
+                                <Markdown
+                                    options={{
+                                        overrides: {
+                                            code: {
+                                                component: SyntaxHighlighter,
+                                                props: {
+                                                    style: solarizedlight,
+                                                    language: "javascript",
+                                                },
+                                            },
+                                        },
+                                    }}
+                                >
+                                    {msg.sender._id === user._id ? msg.message : JSON.parse(msg.message).text}
+                                </Markdown>
                             </div>
                         ))}
                     </div>
 
-                    {/* Input */}
                     <div className="input-box w-full flex border h-14 border-gray-400">
                         <input
                             onChange={(e) => setMsg(e.target.value)}
@@ -117,23 +130,25 @@ const Project = () => {
                             type="text"
                             value={msg}
                             placeholder="Enter your message"
-                            className=" px-4 border-4 outline-none w-[85%]"
+                            className="px-4 border-4 outline-none w-[85%]"
                         />
-                        <button onClick={sendMsg} className="flex-grow bg-black text-white  h-full " aria-label="Send Message">
-                            <i className="ri-send-plane-line text-2xl   "></i>
+                        <button onClick={sendMsg} className="flex-grow bg-black text-white h-full" aria-label="Send Message">
+                            <i className="ri-send-plane-line text-2xl"></i>
                         </button>
                     </div>
                 </div>
             </section>
 
-            {/* Side Panel */}
+
+            <section className=""></section>
+
             {isPanelOpen && (
-               <div
-               className="side-panel w-[400px] h-full max-h-full bg-slate-500 absolute top-0 left-0 overflow-y-scroll scrollbar-hidden transition-all duration-300 ease-in-out"
-               style={{
-                   transform: isPanelOpen ? "translateX(0)" : "translateX(-100%)",
-               }}
-           >
+                <div
+                    className="side-panel w-[400px] h-full max-h-full bg-slate-500 absolute top-0 left-0 overflow-y-scroll scrollbar-hidden transition-all duration-300 ease-in-out"
+                    style={{
+                        transform: isPanelOpen ? "translateX(0)" : "translateX(-100%)",
+                    }}
+                >
                     <header className="w-full h-14 p-2 px-4 flex items-center justify-between bg-gray-300 sticky top-0">
                         <h1 className="text-2xl font-bold">Collaborators</h1>
                         <button
@@ -144,13 +159,9 @@ const Project = () => {
                             <i className="ri-close-large-fill text-2xl"></i>
                         </button>
                     </header>
-                    <div className="users flex flex-col gap-3 mt-7   ">
-                        
-                    </div>
                 </div>
             )}
 
-            {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="relative">
@@ -170,3 +181,4 @@ const Project = () => {
 };
 
 export default Project;
+
