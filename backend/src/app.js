@@ -29,14 +29,14 @@ app.use(cookieParser())
 import userRouter from "../src/routes/user.routes.js"
 import projectRoutes from "../src/routes/project.routes.js"
 import aiRoutes from "../src/routes/ai.routes.js"
-import quizRoutes from "../src/routes/quiz.routes.js"
+
 
 
 // routes declaration hlooo every one
 app.use("/user",userRouter);
 app.use("/projects",projectRoutes);
 app.use("/ai",aiRoutes);
-app.use("/quiz",quizRoutes);
+
 
 
 

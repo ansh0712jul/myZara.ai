@@ -4,7 +4,16 @@ import SelectUser from "@/dialog/SelectUser";
 import axios from "@/config/axios";
 import { initializeSocket, receiveMessage, sendMessage } from "@/config/socket";
 import { userContext } from "../contextApi/User.context";
-import Quiz from "./Quiz";
+
+
+
+
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
+
+import Markdown from 'markdown-to-jsx' 
+
+
 
 const Project = () => {
     const location = useLocation();
@@ -145,8 +154,8 @@ const Project = () => {
                             <i className="ri-close-large-fill text-2xl"></i>
                         </button>
                     </header>
-                    <div className="users flex flex-col gap-3 mt-7">
-                        {projectUsers.map((user, index) => (
+                    <div className="users flex flex-col gap-3 mt-7   ">
+                    {projectUsers.map((user, index) => (
                             <div
                                 key={index}
                                 className="user h-12 mx-auto rounded-lg w-4/5 p-2 px-4 bg-slate-50 flex items-center gap-2"
