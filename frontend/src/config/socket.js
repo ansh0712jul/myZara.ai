@@ -26,6 +26,7 @@ export const initializeSocket = (projectId) => {
     return socketInstance;
 };
 
+
 export const getSocketInstance = () => {
     if (!socketInstance) {
         throw new Error("Socket not initialized. Call initializeSocket first.");

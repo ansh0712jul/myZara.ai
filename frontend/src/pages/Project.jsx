@@ -4,6 +4,7 @@ import SelectUser from "@/dialog/SelectUser";
 import axios from "@/config/axios";
 import { initializeSocket, receiveMessage, sendMessage } from "@/config/socket";
 import { userContext } from "../contextApi/User.context";
+import Quiz from "./Quiz";
 
 const Project = () => {
     const location = useLocation();
@@ -175,6 +176,7 @@ const Project = () => {
                     </div>
                 </div>
             )}
+            
         </main>
     );
 };
