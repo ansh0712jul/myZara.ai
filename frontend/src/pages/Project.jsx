@@ -10,14 +10,6 @@ import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 
 
-
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
-
-import Markdown from 'markdown-to-jsx' 
-
-
-
 const Project = () => {
     const location = useLocation();
     const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -110,8 +102,10 @@ const Project = () => {
                                 className={`message ${
                                     msg.sender._id === user._id
                                         ? "outgoing ml-auto bg-red-300 text-black"
+                                         : msg.sender._id === "ai"
+                                        ? "incoming mr-auto bg-black text-white"
                                         : "incoming mr-auto bg-gray-200 text-black"
-                                } max-w-60 w-fit p-2 px-4 rounded-sm flex flex-col`}
+                                } max-w-64 w-fit p-2 px-4 rounded-sm flex flex-col break-words`}
                             >
                                 <small className="opacity-50 text-xs">{msg.sender.userName}</small>
                                 <Markdown
@@ -133,7 +127,7 @@ const Project = () => {
                         ))}
                     </div>
 
-                    <div className="input-box w-full flex border h-14 border-gray-400">
+                    <div className="input-box w-full flex border h-12 border-gray-400">
                         <input
                             onChange={(e) => setMsg(e.target.value)}
                             onKeyDown={handleSendMsg}
