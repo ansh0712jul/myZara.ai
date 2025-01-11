@@ -81,7 +81,8 @@ io.on('connection', (socket) => {
                 sender :{
                     _id: 'ai',
                     userName: 'zara.ai'
-                }
+                },
+                isCode: true
 
             })
             return 
