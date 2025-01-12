@@ -65,23 +65,36 @@ const Project = () => {
         messagebox.current.scrollTop = messagebox.current.scrollHeight;
     };
     function WriteAiMessage(message) {
-
-        const messageObject = JSON.parse(message); // Parse the message
+        let messageObject = {};
     
+        try {
+            // Check if message is a valid JSON string and parse it
+            if (typeof message === 'string' && message.trim().startsWith("{") && message.trim().endsWith("}")) {
+                messageObject = JSON.parse(message);  // Parse the message if it's valid JSON
+            } else {
+                console.warn("Received message is not a valid JSON string:", message);
+                messageObject.text = message;  // If not JSON, assume it's plain text
+            }
+        } catch (error) {
+            console.error("Error parsing message:", error);
+            messageObject.text = "Failed to parse message";  // Provide a fallback message
+        }
+    
+        // Return the message in a styled div with Markdown rendering
         return (
-            <div
-                className='overflow-auto bg-slate-950 text-white rounded-sm p-2'
-            >
+            <div className="overflow-auto bg-slate-950 text-white rounded-sm p-2">
                 <Markdown
                     children={messageObject.text}
                     options={{
                         overrides: {
-                            code: SyntaxHighlightedCode,
+                            code: SyntaxHighlightedCode,  // Ensure you have this component for code highlighting
                         },
                     }}
                 />
-            </div>)
+            </div>
+        );
     }
+    
 
     const handleSendMsg = (e) => {
         if (e.key === "Enter" && msg !== "") {
