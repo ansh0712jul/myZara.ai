@@ -3,23 +3,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { FaLaptopCode, FaUsers, FaRegClock, FaInstagram, FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa"; 
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
-import React from "react";
 
 const LandingPage = () => {
   return (
     <div className="bg-gray-900 text-white min-h-screen">
       {/* Hero Section */}
-      <header className="relative h-[90vh] flex items-center justify-center text-center">
+      <header className="relative h-[60vh] flex items-center justify-center text-center">
         {/* Video Background */}
         <div className="absolute inset-0 z-0 overflow-hidden">
-          <iframe
-            src="https://www.youtube.com/embed/phs3D1YseeI?autoplay=1&mute=1&loop=1&start=47&end=72&playlist=phs3D1YseeI"
-            title="YouTube video background"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
+          <img
+            src="https://themarketinghustle.com/wp-content/uploads/2024/04/A-low-poly-art-style-image-representing-The-Role-of-AI-in-Achieving-High-Level-Personalization.-The-scene-includes-a-human-figure-composed-of-geomet.webp"
             className="absolute inset-0 w-full h-full object-cover"
-          ></iframe>
+          ></img>
           <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         </div>
 
@@ -167,16 +162,16 @@ const LandingPage = () => {
               <h4 className="text-xl font-semibold text-gray-100 mb-6">Quick Links</h4>
               <ul className="space-y-4">
                 <li className="hover:border-b-2 border-gray-400 w-fit">
-                  <Link to="/" className="text-gray-400 hover:text-white">Home</Link>
+                  <Link to="#" className="text-gray-400 hover:text-white">Home</Link>
                 </li>
                 <li className="hover:border-b-2 border-gray-400 w-fit">
-                  <Link to="/features" className="text-gray-400 hover:text-white">Features</Link>
+                  <Link to="#" className="text-gray-400 hover:text-white">Features</Link>
                 </li>
                 <li className="hover:border-b-2 border-gray-400 w-fit">
-                  <Link to="/about" className="text-gray-400 hover:text-white">About</Link>
+                  <Link to="#" className="text-gray-400 hover:text-white">About</Link>
                 </li>
                 <li className="hover:border-b-2 border-gray-400 w-fit">
-                  <Link to="/pricing" className="text-gray-400 hover:text-white">Pricing</Link>
+                  <Link to="#" className="text-gray-400 hover:text-white">Pricing</Link>
                 </li>
               </ul>
             </div>
@@ -188,13 +183,13 @@ const LandingPage = () => {
                 <Link to="https://instagram.com" className="text-[#672ACC] text-2xl hover:text-[#4737CA]">
                   <FaInstagram />
                 </Link>
-                <Link to="https://twitter.com" className="text-[#672ACC] text-2xl hover:text-[#4737CA]">
+                <Link to="https://x.com/AnshAgrawa_12" className="text-[#672ACC] text-2xl hover:text-[#4737CA]">
                   <FaTwitter />
                 </Link>
-                <Link to="https://linkedin.com" className="text-[#672ACC] text-2xl hover:text-[#4737CA]">
+                <Link to="https://www.linkedin.com/in/madhav-bansal-925aa5241?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" className="text-[#672ACC] text-2xl hover:text-[#4737CA]">
                   <FaLinkedin />
                 </Link>
-                <Link to="https://github.com" className="text-[#672ACC] text-2xl hover:text-[#4737CA]">
+                <Link to="https://github.com/ansh0712jul" className="text-[#672ACC] text-2xl hover:text-[#4737CA]">
                   <FaGithub />
                 </Link>
               </div>
